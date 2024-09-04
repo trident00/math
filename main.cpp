@@ -8,7 +8,8 @@
 #include <stack>
 #include <queue>
 #include <cassert>
-#include "glfw3.h"
+#include <GLFW/glfw3.h>
+#include <thread>
 
 #define PI 3.141592653589793238462643383279502884197169399375105820974944
 #define E 2.7182818284590452353602874713527
@@ -365,9 +366,170 @@ std::vector<std::pair<double, double>> evaluate_function(const std::queue<Token>
 	return results;
 }
 
-void plot_function(const std::queue<Token>& tokens, double start, double end, double step)
+void display()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBegin(GL_QUADS);
+	glColor3f(0.5f, 0.0f, 1.0f); // make this vertex purple
+	glVertex2f(-0.75, 0.75);
+	glColor3f(1.0f, 0.0f, 0.0f); // make this vertex red
+	glVertex2f(-0.75, -0.75);
+	glColor3f(0.0f, 1.0f, 0.0f); // make this vertex green
+	glVertex2f(0.75, -0.75);
+	glColor3f(1.0f, 1.0f, 0.0f); // make this vertex yellow
+	glVertex2f(0.75, 0.75);
+	glEnd();
+}
+
+std::pair<double, double> to_ndc(std::pair<double, double> point, double scale, double x_scale, double y_scale,
+								 double x_min, double y_min, double x_range, double y_range)
+{
+	double x_ndc = (point.first - x_min) * x_scale - (x_range / scale);
+	double y_ndc = (point.second - y_min) * y_scale - (y_range / scale);
+
+	return {x_ndc, y_ndc};
+}
+
+struct PlotData {
+	String function;
+	std::vector<std::pair<double, double>> coordinates;
+	bool smooth;
+	bool incremental;
+
+	PlotData(const String& func, const auto& coords, bool sm, bool inc)
+	: function(func), coordinates(coords), smooth(sm), incremental(inc) {}
+};
+
+struct PlotState {
+	int current_point = 0;
+	bool drawing_complete = false;
+};
+
+void plot_function(const PlotData& plot_data, PlotState& plot_state)
+{
+	// Min/Max values
+	double x_min = std::numeric_limits<double>::max();
+	double x_max = std::numeric_limits<double>::lowest();
+	double y_min = std::numeric_limits<double>::max();
+	double y_max = std::numeric_limits<double>::lowest();
+
+	for (const auto& point : plot_data.coordinates) {
+		x_min = std::min(x_min, point.first);
+		x_max = std::max(x_max, point.first);
+		y_min = std::min(y_min, point.second);
+		y_max = std::max(y_max, point.second);
+	}
+
+	// Mapping to NDC for use of GLFW3
+	double x_range = x_max - x_min;
+	double y_range = y_max - y_min;
 	
+	// Calculate adjusted ranges
+	double scale = std::max(x_range, y_range);
+	double x_scale = 2.0 / scale;
+	double y_scale = 2.0 / scale;
+
+	double x_center = (x_max + x_min) / 2;
+	double y_center = (y_max + y_min) / 2;
+
+	std::vector<std::pair<double, double>> ndc_coordinates;
+	for (const auto& point : plot_data.coordinates) {
+		ndc_coordinates.emplace_back(to_ndc(point, scale, x_scale, y_scale, x_min, y_min, x_range, y_range));
+	}
+
+	glViewport(0,0,800,800);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	// Axes
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_LINES);
+
+	// X-axis
+    glVertex2f(to_ndc({x_min, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
+			   to_ndc({x_min, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
+    glVertex2f(to_ndc({x_max, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
+			   to_ndc({x_max, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
+
+    // Y-axis
+    glVertex2f(to_ndc({0, y_min}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
+			   to_ndc({0, y_min}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
+    glVertex2f(to_ndc({0, y_max}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
+			   to_ndc({0, y_max}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
+
+	glEnd();
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	if (plot_data.smooth) glBegin(GL_LINE_STRIP);
+	else glBegin(GL_POINTS);
+	
+	for (int i = 0; i < plot_state.current_point && i < ndc_coordinates.size(); ++i) {
+		glVertex2f(ndc_coordinates[i].first, ndc_coordinates[i].second);
+	}
+
+	glEnd();
+
+	// Check if drawing is complete
+    if (plot_state.current_point < ndc_coordinates.size()) {
+        ++plot_state.current_point;
+    } else {
+        plot_state.drawing_complete = true;
+    }
+}
+
+void menu()
+{
+	glViewport(800, 0, 200, 800);
+}
+
+int init_window(const PlotData& plot_data)
+{
+	// Initialize the library
+	if (!glfwInit()) return -1;
+
+	// Set the window to be non-resizable
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+	// Create windowed mode window and its OpenGL context
+	String title = "Plot of " + plot_data.function;
+	GLFWwindow* window = glfwCreateWindow(1000, 800, title.c_str(), NULL, NULL);
+	if (!window) {
+		glfwTerminate();
+		return -1;
+	}
+
+	// Make window's context current
+	glfwMakeContextCurrent(window);
+	// Register the framebuffer size callback
+	glfwSetFramebufferSizeCallback(window, [](GLFWwindow*, int, int) {
+		glViewport(0, 0, 800, 800);
+	});
+
+	PlotState plot_state;
+
+	// Loop until the user closes the window
+	while (!glfwWindowShouldClose(window)) {
+		// Render here
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		plot_function(plot_data, plot_state);
+
+		// Swap front and back buffers
+		glfwSwapBuffers(window);
+		// Poll for and process events
+		glfwPollEvents();
+
+		// Delay to control the drawing speed
+		const double desired_duration = 1.0; // seconds
+		double delay_per_point = (desired_duration * 1000.0) / plot_data.coordinates.size();
+
+        if (!plot_state.drawing_complete) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(delay_per_point)));
+        }
+	}
+
+
+	glfwTerminate();
+	return 0;
 }
 
 //@Debug
@@ -382,29 +544,26 @@ void print_queue(const std::queue<Token> &q)
 	std::cout << "\n";
 }
 
-void framebugger_size_callback(GLFWwindow*, int width, int height)
-{
-	glViewport(0,0,width,height);
-}
 
 int main()
 {
 	//String test_string = "(sin(x)+x^2*cos(x)) / (e^x-log(x))";
-	String test_string = "(sin(x)+x^2*cos(x)) / (e^x-log(x))";
+	String test_string = "log(x)*cos(x)*sinx";
 	std::vector<Token> tokens = lexer_main(test_string);
 	// @Debug
 	std::cout << "Input-:\n" << test_string << "\n\n";
-	std::cout << "Lexer-:\n";
-	for (Token t : tokens) std::cout << t << " " << t.type << "\n";
-	std::cout << "\nParser:-\n";
-	for (Token t : tokens) std::cout << t;
-	std::cout << "\n";
+	//std::cout << "Lexer-:\n";
+	//for (Token t : tokens) std::cout << t << " " << t.type << "\n";
+	//std::cout << "\nParser:-\n";
+	//for (Token t : tokens) std::cout << t;
+	//std::cout << "\n";
+	//std::cout << "\nAlgorithm:-\n";
+	//print_queue(parsed);
+	//std::cout << "\n\n";
 	std::queue<Token> parsed = parser_main(tokens);
-	std::cout << "\nAlgorithm:-\n";
-	print_queue(parsed);
-	std::cout << "\n\n";
-	std::cout << solve_main(parsed) << std::endl;
-	std::cout << "Plot:-\n";
-	evaluate_function(parsed, 0.01, 2, 0.01);
+	const auto& points = evaluate_function(parsed, 1, 12, 0.1);
+	PlotData plot_data(test_string, points, true, true);
+	std::cout << "# of coords:-\n" << points.size();
+	init_window(plot_data);
 	return 0;
 }

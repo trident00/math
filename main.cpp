@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <utility>
 #include <cmath>
 #include <variant>
 #include <vector>
@@ -366,21 +368,6 @@ std::vector<std::pair<double, double>> evaluate_function(const std::queue<Token>
 	return results;
 }
 
-void display()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBegin(GL_QUADS);
-	glColor3f(0.5f, 0.0f, 1.0f); // make this vertex purple
-	glVertex2f(-0.75, 0.75);
-	glColor3f(1.0f, 0.0f, 0.0f); // make this vertex red
-	glVertex2f(-0.75, -0.75);
-	glColor3f(0.0f, 1.0f, 0.0f); // make this vertex green
-	glVertex2f(0.75, -0.75);
-	glColor3f(1.0f, 1.0f, 0.0f); // make this vertex yellow
-	glVertex2f(0.75, 0.75);
-	glEnd();
-}
-
 std::pair<double, double> to_ndc(std::pair<double, double> point, double scale, double x_scale, double y_scale,
 								 double x_min, double y_min, double x_range, double y_range)
 {
@@ -393,11 +380,26 @@ std::pair<double, double> to_ndc(std::pair<double, double> point, double scale, 
 struct PlotData {
 	String function;
 	std::vector<std::pair<double, double>> coordinates;
+	std::vector<std::pair<double, double>> ndc_coordinates;
 	bool smooth;
 	bool incremental;
 
 	PlotData(const String& func, const auto& coords, bool sm, bool inc)
 	: function(func), coordinates(coords), smooth(sm), incremental(inc) {}
+
+	void get_min_max(double& x_min, double& x_max, double& y_min, double& y_max) const {
+		x_min = std::numeric_limits<double>::max();
+		x_max = std::numeric_limits<double>::lowest();
+		y_min = std::numeric_limits<double>::max();
+		y_max = std::numeric_limits<double>::lowest();
+
+		for (const auto& point : coordinates) {
+			x_min = std::min(x_min, point.first);
+			x_max = std::max(x_max, point.first);
+			y_min = std::min(y_min, point.second);
+			y_max = std::max(y_max, point.second);
+		}
+	}
 };
 
 struct PlotState {
@@ -405,7 +407,7 @@ struct PlotState {
 	bool drawing_complete = false;
 };
 
-void plot_function(const PlotData& plot_data, PlotState& plot_state)
+void plot_function(const PlotData& plot_data, PlotState& plot_state, GLFWwindow* window)
 {
 	// Min/Max values
 	double x_min = std::numeric_limits<double>::max();
@@ -438,42 +440,45 @@ void plot_function(const PlotData& plot_data, PlotState& plot_state)
 	}
 
 	glViewport(0,0,800,800);
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Axes
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_LINES);
-
-	// X-axis
     glVertex2f(to_ndc({x_min, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
 			   to_ndc({x_min, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
     glVertex2f(to_ndc({x_max, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
 			   to_ndc({x_max, 0}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
-
-    // Y-axis
     glVertex2f(to_ndc({0, y_min}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
 			   to_ndc({0, y_min}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
     glVertex2f(to_ndc({0, y_max}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).first,
 			   to_ndc({0, y_max}, scale, x_scale, y_scale, x_min, y_min, x_range, y_range).second);
-
 	glEnd();
 
-	glColor3f(1.0f, 0.0f, 0.0f);
-	if (plot_data.smooth) glBegin(GL_LINE_STRIP);
-	else glBegin(GL_POINTS);
-	
-	for (int i = 0; i < plot_state.current_point && i < ndc_coordinates.size(); ++i) {
-		glVertex2f(ndc_coordinates[i].first, ndc_coordinates[i].second);
+	// Points
+	while (!glfwWindowShouldClose(window)) {
+		// Render here
+		glColor3f(1.0f, 0.0f, 0.0f);
+		if (plot_data.smooth) glBegin(GL_LINE_STRIP);
+		else glBegin(GL_POINTS);
+
+		for (int i = 0; i < plot_state.current_point && i < ndc_coordinates.size(); ++i) {
+			glVertex2f(ndc_coordinates[i].first, ndc_coordinates[i].second);
+		}
+
+		glEnd();
+		// Check if drawing is complete
+		if (plot_state.current_point < ndc_coordinates.size()) {
+			++plot_state.current_point;
+		} else {
+			plot_state.drawing_complete = true;
+		}
+
+		// Swap front and back buffers
+		glfwSwapBuffers(window);
+		// Poll for and process events
+		glfwPollEvents();
+
 	}
-
-	glEnd();
-
-	// Check if drawing is complete
-    if (plot_state.current_point < ndc_coordinates.size()) {
-        ++plot_state.current_point;
-    } else {
-        plot_state.drawing_complete = true;
-    }
 }
 
 void menu()
@@ -505,32 +510,14 @@ int init_window(const PlotData& plot_data)
 	});
 
 	PlotState plot_state;
-
+	glClear(GL_COLOR_BUFFER_BIT);
 	// Loop until the user closes the window
-	while (!glfwWindowShouldClose(window)) {
-		// Render here
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		plot_function(plot_data, plot_state);
-
-		// Swap front and back buffers
-		glfwSwapBuffers(window);
-		// Poll for and process events
-		glfwPollEvents();
-
-		// Delay to control the drawing speed
-		const double desired_duration = 1.0; // seconds
-		double delay_per_point = (desired_duration * 1000.0) / plot_data.coordinates.size();
-
-        if (!plot_state.drawing_complete) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(delay_per_point)));
-        }
-	}
-
+	plot_function(plot_data, plot_state, window);
 
 	glfwTerminate();
 	return 0;
 }
+
 
 //@Debug
 void print_queue(const std::queue<Token> &q)
@@ -544,11 +531,10 @@ void print_queue(const std::queue<Token> &q)
 	std::cout << "\n";
 }
 
-
 int main()
 {
 	//String test_string = "(sin(x)+x^2*cos(x)) / (e^x-log(x))";
-	String test_string = "log(x)*cos(x)*sinx";
+	String test_string = "x^3";
 	std::vector<Token> tokens = lexer_main(test_string);
 	// @Debug
 	std::cout << "Input-:\n" << test_string << "\n\n";
@@ -561,7 +547,7 @@ int main()
 	//print_queue(parsed);
 	//std::cout << "\n\n";
 	std::queue<Token> parsed = parser_main(tokens);
-	const auto& points = evaluate_function(parsed, 1, 12, 0.1);
+	const auto& points = evaluate_function(parsed, -2, 2, 0.1);
 	PlotData plot_data(test_string, points, true, true);
 	std::cout << "# of coords:-\n" << points.size();
 	init_window(plot_data);

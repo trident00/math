@@ -13,6 +13,6 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 
 # Add compiler flags
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE -lraylib -lgdi32 -lwinmm)
-
+if (WIN32)
+	target_link_libraries(${PROJECT_NAME} PRIVATE -lraylib -lgdi32 -lwinmm)
+endif (WIN32)

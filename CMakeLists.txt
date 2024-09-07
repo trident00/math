@@ -11,4 +11,8 @@ link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
-target_link_libraries(${PROJECT_NAME} glfw3 opengl32 gdi32 user32)
+# Add compiler flags
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE -lraylib -lgdi32 -lwinmm)
+

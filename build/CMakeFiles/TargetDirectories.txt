@@ -1,0 +1,3 @@
+C:/cpp/math/build/CMakeFiles/math.dir
+C:/cpp/math/build/CMakeFiles/edit_cache.dir
+C:/cpp/math/build/CMakeFiles/rebuild_cache.dir

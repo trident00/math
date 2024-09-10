@@ -8,7 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/cpp/math/src/main.cpp" "CMakeFiles/math.dir/src/main.cpp.obj" "gcc" "CMakeFiles/math.dir/src/main.cpp.obj.d"
+  "C:/math/src/ast.cpp" "CMakeFiles/math.dir/src/ast.cpp.obj" "gcc" "CMakeFiles/math.dir/src/ast.cpp.obj.d"
+  "C:/math/src/main.cpp" "CMakeFiles/math.dir/src/main.cpp.obj" "gcc" "CMakeFiles/math.dir/src/main.cpp.obj.d"
+  "C:/math/src/parser.cpp" "CMakeFiles/math.dir/src/parser.cpp.obj" "gcc" "CMakeFiles/math.dir/src/parser.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

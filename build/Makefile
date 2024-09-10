@@ -56,10 +56,10 @@ RM = "C:\Program Files\CMake\bin\cmake.exe" -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\cpp\math
+CMAKE_SOURCE_DIR = C:\math
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\cpp\math\build
+CMAKE_BINARY_DIR = C:\math\build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -86,9 +86,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\cpp\math\build\CMakeFiles C:\cpp\math\build\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\math\build\CMakeFiles C:\math\build\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\cpp\math\build\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\math\build\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -128,6 +128,30 @@ math/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/build
 .PHONY : math/fast
 
+src/ast.obj: src/ast.cpp.obj
+.PHONY : src/ast.obj
+
+# target to build an object file
+src/ast.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/ast.cpp.obj
+.PHONY : src/ast.cpp.obj
+
+src/ast.i: src/ast.cpp.i
+.PHONY : src/ast.i
+
+# target to preprocess a source file
+src/ast.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/ast.cpp.i
+.PHONY : src/ast.cpp.i
+
+src/ast.s: src/ast.cpp.s
+.PHONY : src/ast.s
+
+# target to generate assembly for a file
+src/ast.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/ast.cpp.s
+.PHONY : src/ast.cpp.s
+
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -152,6 +176,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/parser.obj: src/parser.cpp.obj
+.PHONY : src/parser.obj
+
+# target to build an object file
+src/parser.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/parser.cpp.obj
+.PHONY : src/parser.cpp.obj
+
+src/parser.i: src/parser.cpp.i
+.PHONY : src/parser.i
+
+# target to preprocess a source file
+src/parser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/parser.cpp.i
+.PHONY : src/parser.cpp.i
+
+src/parser.s: src/parser.cpp.s
+.PHONY : src/parser.s
+
+# target to generate assembly for a file
+src/parser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/parser.cpp.s
+.PHONY : src/parser.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -161,9 +209,15 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... math
+	@echo ... src/ast.obj
+	@echo ... src/ast.i
+	@echo ... src/ast.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
+	@echo ... src/parser.obj
+	@echo ... src/parser.i
+	@echo ... src/parser.s
 .PHONY : help
 
 

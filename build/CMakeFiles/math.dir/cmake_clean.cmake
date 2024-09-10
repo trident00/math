@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/math.dir/src/ast.cpp.obj"
+  "CMakeFiles/math.dir/src/ast.cpp.obj.d"
   "CMakeFiles/math.dir/src/main.cpp.obj"
   "CMakeFiles/math.dir/src/main.cpp.obj.d"
+  "CMakeFiles/math.dir/src/parser.cpp.obj"
+  "CMakeFiles/math.dir/src/parser.cpp.obj.d"
   "libmath.dll.a"
   "math.exe"
   "math.exe.manifest"

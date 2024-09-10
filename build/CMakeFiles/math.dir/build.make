@@ -98,33 +98,33 @@ CMakeFiles/math.dir/src/parser.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/math.dir/src/parser.cpp.s"
 	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\math\src\parser.cpp -o CMakeFiles\math.dir\src\parser.cpp.s
 
-CMakeFiles/math.dir/src/main.cpp.obj: CMakeFiles/math.dir/flags.make
-CMakeFiles/math.dir/src/main.cpp.obj: CMakeFiles/math.dir/includes_CXX.rsp
-CMakeFiles/math.dir/src/main.cpp.obj: C:/math/src/main.cpp
-CMakeFiles/math.dir/src/main.cpp.obj: CMakeFiles/math.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\math\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/math.dir/src/main.cpp.obj"
-	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/math.dir/src/main.cpp.obj -MF CMakeFiles\math.dir\src\main.cpp.obj.d -o CMakeFiles\math.dir\src\main.cpp.obj -c C:\math\src\main.cpp
+CMakeFiles/math.dir/src/main2.cpp.obj: CMakeFiles/math.dir/flags.make
+CMakeFiles/math.dir/src/main2.cpp.obj: CMakeFiles/math.dir/includes_CXX.rsp
+CMakeFiles/math.dir/src/main2.cpp.obj: C:/math/src/main2.cpp
+CMakeFiles/math.dir/src/main2.cpp.obj: CMakeFiles/math.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\math\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/math.dir/src/main2.cpp.obj"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/math.dir/src/main2.cpp.obj -MF CMakeFiles\math.dir\src\main2.cpp.obj.d -o CMakeFiles\math.dir\src\main2.cpp.obj -c C:\math\src\main2.cpp
 
-CMakeFiles/math.dir/src/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/math.dir/src/main.cpp.i"
-	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\math\src\main.cpp > CMakeFiles\math.dir\src\main.cpp.i
+CMakeFiles/math.dir/src/main2.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/math.dir/src/main2.cpp.i"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\math\src\main2.cpp > CMakeFiles\math.dir\src\main2.cpp.i
 
-CMakeFiles/math.dir/src/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/math.dir/src/main.cpp.s"
-	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\math\src\main.cpp -o CMakeFiles\math.dir\src\main.cpp.s
+CMakeFiles/math.dir/src/main2.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/math.dir/src/main2.cpp.s"
+	C:\ProgramData\mingw64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\math\src\main2.cpp -o CMakeFiles\math.dir\src\main2.cpp.s
 
 # Object files for target math
 math_OBJECTS = \
 "CMakeFiles/math.dir/src/ast.cpp.obj" \
 "CMakeFiles/math.dir/src/parser.cpp.obj" \
-"CMakeFiles/math.dir/src/main.cpp.obj"
+"CMakeFiles/math.dir/src/main2.cpp.obj"
 
 # External object files for target math
 math_EXTERNAL_OBJECTS =
 
 math.exe: CMakeFiles/math.dir/src/ast.cpp.obj
 math.exe: CMakeFiles/math.dir/src/parser.cpp.obj
-math.exe: CMakeFiles/math.dir/src/main.cpp.obj
+math.exe: CMakeFiles/math.dir/src/main2.cpp.obj
 math.exe: CMakeFiles/math.dir/build.make
 math.exe: CMakeFiles/math.dir/linkLibs.rsp
 math.exe: CMakeFiles/math.dir/objects1.rsp

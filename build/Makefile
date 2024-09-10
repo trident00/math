@@ -152,29 +152,29 @@ src/ast.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/ast.cpp.s
 .PHONY : src/ast.cpp.s
 
-src/main.obj: src/main.cpp.obj
-.PHONY : src/main.obj
+src/main2.obj: src/main2.cpp.obj
+.PHONY : src/main2.obj
 
 # target to build an object file
-src/main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/main.cpp.obj
-.PHONY : src/main.cpp.obj
+src/main2.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/main2.cpp.obj
+.PHONY : src/main2.cpp.obj
 
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
+src/main2.i: src/main2.cpp.i
+.PHONY : src/main2.i
 
 # target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
+src/main2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/main2.cpp.i
+.PHONY : src/main2.cpp.i
 
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
+src/main2.s: src/main2.cpp.s
+.PHONY : src/main2.s
 
 # target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
+src/main2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\math.dir\build.make CMakeFiles/math.dir/src/main2.cpp.s
+.PHONY : src/main2.cpp.s
 
 src/parser.obj: src/parser.cpp.obj
 .PHONY : src/parser.obj
@@ -212,9 +212,9 @@ help:
 	@echo ... src/ast.obj
 	@echo ... src/ast.i
 	@echo ... src/ast.s
-	@echo ... src/main.obj
-	@echo ... src/main.i
-	@echo ... src/main.s
+	@echo ... src/main2.obj
+	@echo ... src/main2.i
+	@echo ... src/main2.s
 	@echo ... src/parser.obj
 	@echo ... src/parser.i
 	@echo ... src/parser.s

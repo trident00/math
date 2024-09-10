@@ -34,6 +34,9 @@ std::unordered_map<char, double> variable_map = {
 	{'z', 1.0f}
 };
 
+
+
+
 typedef std::pair<bool, int> PlotState;
 
 const int screen_width	= 1000;
@@ -54,6 +57,7 @@ struct PlotData {
 	float axis_limit = 99999999.0f;
 };
 
+
 std::vector<Vector2> evaluate_function(AstNode* tree, double start, double end, double step)
 {
 	std::vector<Vector2> results;
@@ -70,6 +74,13 @@ std::vector<Vector2> evaluate_function(AstNode* tree, double start, double end, 
 	return results;
 }
 
+PlotData function(String f, double xmi, double xmx, double dx)
+{
+	PlotData data;
+	data.function = f; data.xmi = xmi; data.xmx = xmx; data.dx = dx;
+	data.coordinates = evaluate_function(ast_tree(f), xmi, xmx, dx);
+	return data;
+}
 //
 //	CALCULATE FUNCTIONS
 //
@@ -138,16 +149,15 @@ std::vector<Vector2> cal_axes(PlotData& data, float x, float y)
 void cal_grid(PlotData& data, int grid_step)
 {
 	// X
-	std::vector<Vector2> x_points; std::vector<Vector2> y_points;
-	
-	// Correct height of grid
-	For (x_points) {
-		printf("(%f, %f)\n", item.x, item.y);
-		//printf("(%f, %f)->(%f, %f) : (%f, %f)->(%f, %f)\n", item[0].x, item[0].y, item[1].x, item[1].y, item[2].x, item[2].y, item[3].x, item[3].y);
+	std::vector<PlotData*> x_points; std::vector<Vector2> y_points;
+	for (int x = data.xmi; x <= data.xmx; x+= grid_step) {
+		String func = std::to_string(data.axis_limit) + "(x + " + std::to_string(x) + ")";
+		std::cout<<func<<std::endl;
+		x_points.emplace_back(new PlotData(function(func, x, x, 1)));
 	}
-	For (y_points) {
-		printf("(%f, %f)\n", item.x, item.y);
-	}
+	//For (x_points) {
+	//	prepare_data(&item);
+	//}
 }
 //
 //	DRAW FUNCTIONS
@@ -176,7 +186,7 @@ void draw_function(PlotData& data, PlotState& state, const Color& color)
 
 void update_drawing(PlotData& data, PlotState& state, int points, int fps, float total_time, bool s)
 {
-	float points_per_frame = static_cast<float>(points) / (fps * total_time * 30);
+	float points_per_frame = static_cast<float>(points) / (fps * total_time * 5);
 	if (state.second < points) {
 		state.second += points_per_frame;
 		if (state.second > points) {
@@ -235,22 +245,15 @@ void plot(std::vector<PlotData*>& plots, int first=0, int fps=60)
 	}
 }
 
-PlotData function(String f, double xmi, double xmx, double dx)
-{
-	PlotData data;
-	data.function = f; data.xmi = xmi; data.xmx = xmx; data.dx = dx;
-	data.coordinates = evaluate_function(ast_tree(f), xmi, xmx, dx);
-	return data;
-}
+
 
 int main()
 {
 	InitWindow(1000, 800, "Math.exe");
-	PlotData f_2 = function("0.1xx", -4, 4, 0.001);
-	PlotData f_1 = function("cos(sin(tanx))", -4, 4, 0.001);
-	std::vector<PlotData*> fs = {&f_1, &f_2};
-	prepare_data(f_1);
-	prepare_data(f_2, f_1);
+	PlotData f_2 = function("x^2", -200, 200, 0.0001);
+	PlotData f_1 = function("x^2", -1, 1, 0.0001);
+	std::vector<PlotData*> fs = {&f_2};
+	prepare_data(f_2);
 	plot(fs);
 	return 0;
 }

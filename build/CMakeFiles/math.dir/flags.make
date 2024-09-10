@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = @CMakeFiles/math.dir/includes_CXX.rsp
 
-CXX_FLAGS = -std=gnu++20 -Wall
+CXX_FLAGS = -std=gnu++20 -Wpedantic
 

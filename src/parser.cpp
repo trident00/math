@@ -60,6 +60,14 @@ Token* create_token_mult()
 	return mult;
 }
 
+Token* create_token_negative()
+{
+	Token* negative = new Token();
+	negative->num = -1;
+	negative->type = NUMBER;
+	return negative;
+}
+
 std::vector<Token*> lexer(const String& input)
 {
 	std::vector<Token*> result;
@@ -71,8 +79,14 @@ std::vector<Token*> lexer(const String& input)
 			num_buffer += c;
 			if (!isdigit(input[i+1]) && input[i+1] != '.') {
 				Token* n_token = new Token();
-				n_token->num = std::stod(num_buffer);
 				n_token->type = NUMBER;
+				// Handle negative numbers:
+				if (!result.empty() && result.back()->type == OPERATOR_SUBTRACT) {
+					result.pop_back();
+					n_token->num = -std::stod(num_buffer);
+				} else {
+					n_token->num = std::stod(num_buffer);
+				}
 				result.emplace_back(n_token);
 				num_buffer.clear();
 			}
@@ -94,6 +108,10 @@ std::vector<Token*> lexer(const String& input)
 					} else if ((is_number(adj) || is_variable(adj))
 							&& (is_function(f_token) || f_token->type == LPAREN || is_variable(f_token))) {
 						// Number/Variable before Paren/Function/Variable: 3(x) = 3*(x), 3sin(x) = 3*sin(x)
+						result.emplace_back(create_token_mult());
+					} else if ((is_variable(f_token) || is_function(f_token)) && adj->type == OPERATOR_SUBTRACT) {
+						result.pop_back();
+						result.emplace_back(create_token_negative());
 						result.emplace_back(create_token_mult());
 					}
 				}
@@ -188,7 +206,7 @@ AstNode* to_ast(std::queue<Token*> tokens)
 	std::stack<AstNode*> buffer_stack;
 	while (!tokens.empty()) {
 		Token* t = tokens.front();
-		//std::cout << "Processing Token: " << print_token(t) << std::endl;
+		std::cout << "Processing Token: " << print_token(t) << std::endl;
 		if (is_number(t)) {
 			buffer_stack.push(create_node_number(t->num));
 			tokens.pop();

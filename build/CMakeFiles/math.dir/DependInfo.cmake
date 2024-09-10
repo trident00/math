@@ -9,7 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/math/src/ast.cpp" "CMakeFiles/math.dir/src/ast.cpp.obj" "gcc" "CMakeFiles/math.dir/src/ast.cpp.obj.d"
-  "C:/math/src/main.cpp" "CMakeFiles/math.dir/src/main.cpp.obj" "gcc" "CMakeFiles/math.dir/src/main.cpp.obj.d"
+  "C:/math/src/main2.cpp" "CMakeFiles/math.dir/src/main2.cpp.obj" "gcc" "CMakeFiles/math.dir/src/main2.cpp.obj.d"
   "C:/math/src/parser.cpp" "CMakeFiles/math.dir/src/parser.cpp.obj" "gcc" "CMakeFiles/math.dir/src/parser.cpp.obj.d"
   )
 

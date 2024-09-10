@@ -188,7 +188,7 @@ AstNode* to_ast(std::queue<Token*> tokens)
 	std::stack<AstNode*> buffer_stack;
 	while (!tokens.empty()) {
 		Token* t = tokens.front();
-		std::cout << "Processing Token: " << print_token(t) << std::endl;
+		//std::cout << "Processing Token: " << print_token(t) << std::endl;
 		if (is_number(t)) {
 			buffer_stack.push(create_node_number(t->num));
 			tokens.pop();
@@ -210,9 +210,10 @@ AstNode* to_ast(std::queue<Token*> tokens)
 			buffer_stack.push(create_node_function(t, arg));
 			tokens.pop();
 		}
-		std::cout << " -> Buffer Stack Size: " << buffer_stack.size() << std::endl;
+		//std::cout << " -> Buffer Stack Size: " << buffer_stack.size() << std::endl;
 	}
 	assert(buffer_stack.size() == 1);
+	print_ast_tree(buffer_stack.top());
 	return buffer_stack.top();
 }
 

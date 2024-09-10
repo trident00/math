@@ -176,7 +176,7 @@ void draw_function(PlotData& data, PlotState& state, const Color& color)
 
 void update_drawing(PlotData& data, PlotState& state, int points, int fps, float total_time, bool s)
 {
-	float points_per_frame = static_cast<float>(points) / (fps * total_time);
+	float points_per_frame = static_cast<float>(points) / (fps * total_time * 30);
 	if (state.second < points) {
 		state.second += points_per_frame;
 		if (state.second > points) {
@@ -246,8 +246,8 @@ PlotData function(String f, double xmi, double xmx, double dx)
 int main()
 {
 	InitWindow(1000, 800, "Math.exe");
-	PlotData f_1 = function("cos(sin(tan(x^2)))", -2,2, 0.001);
-	PlotData f_2 = function("1-x^4/2-x^8/8", -2, 2, 0.001);
+	PlotData f_2 = function("0.1xx", -4, 4, 0.001);
+	PlotData f_1 = function("cos(sin(tanx))", -4, 4, 0.001);
 	std::vector<PlotData*> fs = {&f_1, &f_2};
 	prepare_data(f_1);
 	prepare_data(f_2, f_1);

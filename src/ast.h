@@ -49,3 +49,4 @@ String to_string(TokenType t);
 String to_string(NodeType t);
 String print_token(Token* t);
 std::string print_ast(AstNode* node);
+void print_ast_tree(const AstNode* node, int depth=0, String prefix="", bool first_flag=true);

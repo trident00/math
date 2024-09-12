@@ -1,0 +1,194 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	C:/math/src/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/80ee839/
+AstNode	ast.h	/^	AstNode() {}	\/\/ Constructor$/;"	f	struct:AstNode
+AstNode	ast.h	/^struct AstNode$/;"	s
+Coordinates2D	main.cpp	/^	Coordinates2D() {}$/;"	f	struct:Coordinates2D	file:
+Coordinates2D	main.cpp	/^struct Coordinates2D$/;"	s	file:
+E	ast.cpp	/^#define E	/;"	d	file:
+E	main.cpp	/^#define E	/;"	d	file:
+E	main_old.cpp	/^#define E	/;"	d	file:
+E	parser.h	/^#define E	/;"	d
+FINISH	main_old.cpp	/^#define FINISH(/;"	d	file:
+FUNCTION_ABS	parser.h	/^	FUNCTION_ABS,$/;"	e	enum:TokenType
+FUNCTION_COS	parser.h	/^	FUNCTION_COS,$/;"	e	enum:TokenType
+FUNCTION_COT	parser.h	/^	FUNCTION_COT,$/;"	e	enum:TokenType
+FUNCTION_CSC	parser.h	/^	FUNCTION_CSC,$/;"	e	enum:TokenType
+FUNCTION_LOG	parser.h	/^	FUNCTION_LOG$/;"	e	enum:TokenType
+FUNCTION_SEC	parser.h	/^	FUNCTION_SEC,$/;"	e	enum:TokenType
+FUNCTION_SIN	parser.h	/^	FUNCTION_SIN,$/;"	e	enum:TokenType
+FUNCTION_SQRT	parser.h	/^	FUNCTION_SQRT,$/;"	e	enum:TokenType
+FUNCTION_TAN	parser.h	/^	FUNCTION_TAN,$/;"	e	enum:TokenType
+For	ast.cpp	/^#define For(/;"	d	file:
+For	main_old.cpp	/^#define For(/;"	d	file:
+For	parser.h	/^#define For(/;"	d
+Function	main.cpp	/^	Function() {}$/;"	f	struct:Function	file:
+Function	main.cpp	/^struct Function$/;"	s	file:
+FunctionNode	ast.h	/^		} FunctionNode;$/;"	m	union:AstNode::__anon0f1b4c63010a	typeref:struct:AstNode::__anon0f1b4c63010a::__anon0f1b4c630308
+INF	main.cpp	/^#define INF /;"	d	file:
+INF	main_old.cpp	/^#define INF	/;"	d	file:
+LPAREN	parser.h	/^	LPAREN,$/;"	e	enum:TokenType
+NODE_FUNCTION	ast.h	/^	NODE_FUNCTION$/;"	e	enum:NodeType
+NODE_NUMBER	ast.h	/^	NODE_NUMBER,$/;"	e	enum:NodeType
+NODE_OPERATOR	ast.h	/^	NODE_OPERATOR,$/;"	e	enum:NodeType
+NODE_VARIABLE	ast.h	/^	NODE_VARIABLE,$/;"	e	enum:NodeType
+NUMBER	parser.h	/^	NUMBER,$/;"	e	enum:TokenType
+NUMBER_E	parser.h	/^	NUMBER_E,$/;"	e	enum:TokenType
+NUMBER_PI	parser.h	/^	NUMBER_PI,$/;"	e	enum:TokenType
+NodeType	ast.h	/^enum NodeType$/;"	g
+OPERATOR_ADD	parser.h	/^	OPERATOR_ADD,$/;"	e	enum:TokenType
+OPERATOR_DIVIDE	parser.h	/^	OPERATOR_DIVIDE,$/;"	e	enum:TokenType
+OPERATOR_MULTIPLY	parser.h	/^	OPERATOR_MULTIPLY,$/;"	e	enum:TokenType
+OPERATOR_POWER	parser.h	/^	OPERATOR_POWER,$/;"	e	enum:TokenType
+OPERATOR_SUBTRACT	parser.h	/^	OPERATOR_SUBTRACT,$/;"	e	enum:TokenType
+Operator	parser.cpp	/^struct Operator$/;"	s	file:
+OperatorNode	ast.h	/^		} OperatorNode;$/;"	m	union:AstNode::__anon0f1b4c63010a	typeref:struct:AstNode::__anon0f1b4c63010a::__anon0f1b4c630208
+PI	ast.cpp	/^#define PI	/;"	d	file:
+PI	parser.cpp	/^#define PI	/;"	d	file:
+PlotData	main_old.cpp	/^struct PlotData {$/;"	s	file:
+PlotState	main_old.cpp	/^typedef std::pair<bool, int> PlotState;$/;"	t	typeref:typename:std::pair<bool,int>	file:
+RPAREN	parser.h	/^	RPAREN,$/;"	e	enum:TokenType
+String	ast.h	/^using String = std::string;$/;"	t	typeref:typename:std::string
+String	parser.cpp	/^using String = std::string;$/;"	t	typeref:typename:std::string	file:
+String	parser.h	/^using String = std::string;$/;"	t	typeref:typename:std::string
+Token	parser.h	/^	Token() {}$/;"	f	struct:Token
+Token	parser.h	/^struct Token$/;"	s
+TokenType	parser.h	/^enum TokenType$/;"	g
+VARIABLE_X	parser.h	/^	VARIABLE_X,$/;"	e	enum:TokenType
+VARIABLE_Y	parser.h	/^	VARIABLE_Y,$/;"	e	enum:TokenType
+VARIABLE_Z	parser.h	/^	VARIABLE_Z,$/;"	e	enum:TokenType
+__anon0f1b4c63010a	ast.h	/^	union {$/;"	u	struct:AstNode
+__anon0f1b4c630208	ast.h	/^		struct {$/;"	s	union:AstNode::__anon0f1b4c63010a
+__anon0f1b4c630308	ast.h	/^		struct {$/;"	s	union:AstNode::__anon0f1b4c63010a
+add	parser.cpp	/^double add(double a, double b) { return a + b; }$/;"	f	typeref:typename:double
+argument	ast.h	/^			AstNode* argument;$/;"	m	struct:AstNode::__anon0f1b4c63010a::__anon0f1b4c630308	typeref:typename:AstNode *
+associativity	parser.cpp	/^	bool associativity; \/\/ true is left$/;"	m	struct:Operator	typeref:typename:bool	file:
+ast_solve	parser.cpp	/^double ast_solve(AstNode* node, double x, double y, double z)$/;"	f	typeref:typename:double
+ast_to_string	parser.cpp	/^String ast_to_string(AstNode* node)$/;"	f	typeref:typename:String
+ast_tree	parser.cpp	/^AstNode* ast_tree(String input)$/;"	f	typeref:typename:AstNode *
+axes_coordinates	main_old.cpp	/^    std::vector<Vector2> axes_coordinates;$/;"	m	struct:PlotData	typeref:typename:std::vector<Vector2>	file:
+axis_limit	main_old.cpp	/^	float axis_limit = 99999999.0f;$/;"	m	struct:PlotData	typeref:typename:float	file:
+binary_operation	parser.cpp	/^std::unordered_map<TokenType, double(*)(double, double)> binary_operation = {$/;"	v	typeref:typename:std::unordered_map<TokenType,double (*)(double,double)>
+cal_axes	main_old.cpp	/^std::vector<Vector2> cal_axes(PlotData& data, float x, float y)$/;"	f	typeref:typename:std::vector<Vector2>
+cal_coords	main_old.cpp	/^void cal_coords(PlotData& data)$/;"	f	typeref:typename:void
+cal_grid	main_old.cpp	/^void cal_grid(PlotData& data, int grid_step)$/;"	f	typeref:typename:void
+cal_minmax	main_old.cpp	/^void cal_minmax(PlotData& data)$/;"	f	typeref:typename:void
+cal_scale	main_old.cpp	/^void cal_scale(PlotData& data)$/;"	f	typeref:typename:void
+colors	main.cpp	/^const std::vector<Color> colors = {$/;"	v	typeref:typename:const std::vector<Color>
+coordinates	main_old.cpp	/^    std::vector<Vector2> coordinates;$/;"	m	struct:PlotData	typeref:typename:std::vector<Vector2>	file:
+coordinates_2d	main.cpp	/^Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* main=nullptr, do/;"	f	typeref:typename:Coordinates2D *
+coords	main.cpp	/^	Coordinates2D* coords;$/;"	m	struct:Function	typeref:typename:Coordinates2D *	file:
+create_function	main.cpp	/^Function* create_function(String str)$/;"	f	typeref:typename:Function *
+create_node_function	ast.cpp	/^AstNode* create_node_function(Token* token, AstNode* arg)$/;"	f	typeref:typename:AstNode *
+create_node_number	ast.cpp	/^AstNode* create_node_number(Token* token)$/;"	f	typeref:typename:AstNode *
+create_node_operator	ast.cpp	/^AstNode* create_node_operator(Token* token, AstNode* left, AstNode* right)$/;"	f	typeref:typename:AstNode *
+create_node_variable	ast.cpp	/^AstNode* create_node_variable(Token* token)$/;"	f	typeref:typename:AstNode *
+create_token_add	parser.cpp	/^Token* create_token_add()$/;"	f	typeref:typename:Token *
+create_token_mult	parser.cpp	/^Token* create_token_mult()$/;"	f	typeref:typename:Token *
+create_token_negative	parser.cpp	/^Token* create_token_negative()$/;"	f	typeref:typename:Token *
+debug	parser.cpp	/^void debug()$/;"	f	typeref:typename:void
+degree	parser.cpp	/^double degree(double a) { return a * PI \/ 180.0; }$/;"	f	typeref:typename:double
+divide	parser.cpp	/^double divide(double a, double b) { if (b == 0); return a \/ b; }$/;"	f	typeref:typename:double
+domain	main.cpp	/^	std::pair<double, double> domain;$/;"	m	struct:Coordinates2D	typeref:typename:std::pair<double,double>	file:
+draw	main.cpp	/^void draw(std::vector<Function*> f)$/;"	f	typeref:typename:void
+draw_axes	main.cpp	/^void draw_axes(Function* f)$/;"	f	typeref:typename:void
+draw_axes	main_old.cpp	/^void draw_axes(PlotData& data, const Color& color)$/;"	f	typeref:typename:void
+draw_function	main_old.cpp	/^void draw_function(PlotData& data, PlotState& state, const Color& color)$/;"	f	typeref:typename:void
+draw_grid	main_old.cpp	/^void draw_grid(PlotData& data, PlotState& state, const Color& color, int x)$/;"	f	typeref:typename:void
+dx	main_old.cpp	/^	double xmi, xmx, dx; \/\/ Config$/;"	m	struct:PlotData	typeref:typename:double	file:
+evaluate_function	main_old.cpp	/^std::vector<Vector2> evaluate_function(AstNode* tree, double start, double end, double step)$/;"	f	typeref:typename:std::vector<Vector2>
+function	ast.h	/^			TokenType function;$/;"	m	struct:AstNode::__anon0f1b4c63010a::__anon0f1b4c630308	typeref:typename:TokenType
+function	main.cpp	/^	AstNode* function; \/\/ ast_tree(function)$/;"	m	struct:Function	typeref:typename:AstNode *	file:
+function	main_old.cpp	/^    std::string function;$/;"	m	struct:PlotData	typeref:typename:std::string	file:
+function	main_old.cpp	/^PlotData function(String f, double xmi, double xmx, double dx)$/;"	f	typeref:typename:PlotData
+graph_height	main.cpp	/^const int graph_height = 1000;$/;"	v	typeref:typename:const int
+graph_height	main_old.cpp	/^const int graph_height	= 800;$/;"	v	typeref:typename:const int
+graph_width	main.cpp	/^const int graph_width = 1000;$/;"	v	typeref:typename:const int
+graph_width	main_old.cpp	/^const int graph_width	= 800;$/;"	v	typeref:typename:const int
+grid_coordinates	main_old.cpp	/^	std::vector<std::vector<Vector2>> grid_coordinates;$/;"	m	struct:PlotData	typeref:typename:std::vector<std::vector<Vector2>>	file:
+is_function	parser.cpp	/^bool is_function(Token* t) { return (t->type >= FUNCTION_SIN && t->type <= FUNCTION_LOG); }$/;"	f	typeref:typename:bool
+is_number	parser.cpp	/^bool is_number(Token* t) { return (t->type >= NUMBER && t->type <= NUMBER_E); }$/;"	f	typeref:typename:bool
+is_operator	parser.cpp	/^bool is_operator(Token* t) { return (t->type >= OPERATOR_ADD && t->type <= OPERATOR_POWER); }$/;"	f	typeref:typename:bool
+is_paren	parser.cpp	/^bool is_paren(Token* t) { return t->type == LPAREN || t->type == RPAREN; }$/;"	f	typeref:typename:bool
+is_variable	parser.cpp	/^bool is_variable(Token* t) { return (t->type >= VARIABLE_X && t->type <= VARIABLE_Z); }$/;"	f	typeref:typename:bool
+left	ast.h	/^			AstNode* left;$/;"	m	struct:AstNode::__anon0f1b4c63010a::__anon0f1b4c630208	typeref:typename:AstNode *
+lexer	parser.cpp	/^std::vector<Token*> lexer(const String& input)$/;"	f	typeref:typename:std::vector<Token * >
+main	main.cpp	/^int main()$/;"	f	typeref:typename:int
+main	main_old.cpp	/^int main()$/;"	f	typeref:typename:int
+math_abs	parser.cpp	/^double math_abs(double a) { return a >=0 ? a : -a; }$/;"	f	typeref:typename:double
+math_cos	parser.cpp	/^double math_cos(double a) { return std::cos(a); }$/;"	f	typeref:typename:double
+math_cot	parser.cpp	/^double math_cot(double a) { return 1.0 \/ std::tan(a); }$/;"	f	typeref:typename:double
+math_csc	parser.cpp	/^double math_csc(double a) { return 1.0 \/ std::sin(a); }$/;"	f	typeref:typename:double
+math_log	parser.cpp	/^double math_log(double a) { if (a <= 0); return std::log(a); }$/;"	f	typeref:typename:double
+math_sec	parser.cpp	/^double math_sec(double a) { return 1.0 \/ std::cos(a); }$/;"	f	typeref:typename:double
+math_sin	parser.cpp	/^double math_sin(double a) { return std::sin(a); }$/;"	f	typeref:typename:double
+math_sqrt	parser.cpp	/^double math_sqrt(double a) { return power(a, 0.5); }$/;"	f	typeref:typename:double
+math_tan	parser.cpp	/^double math_tan(double a) { return std::tan(a); }$/;"	f	typeref:typename:double
+max_coords	main_old.cpp	/^	Vector2 max_coords = {graph_width, graph_height};$/;"	m	struct:PlotData	typeref:typename:Vector2	file:
+multiply	parser.cpp	/^double multiply(double a, double b) { return a * b; }$/;"	f	typeref:typename:double
+normalize	main.cpp	/^Vector2 normalize(double scale, double x, double y, double x_offset, double y_offset)$/;"	f	typeref:typename:Vector2
+num	parser.h	/^	double num; \/\/ Number associated with token$/;"	m	struct:Token	typeref:typename:double
+number_value	ast.h	/^		double number_value;$/;"	m	union:AstNode::__anon0f1b4c63010a	typeref:typename:double
+op	ast.h	/^			TokenType op;$/;"	m	struct:AstNode::__anon0f1b4c63010a::__anon0f1b4c630208	typeref:typename:TokenType
+operator_map	parser.cpp	/^std::unordered_map<TokenType, Operator> operator_map = {$/;"	v	typeref:typename:std::unordered_map<TokenType,Operator>
+parser	parser.cpp	/^std::queue<Token*> parser(std::vector<Token*> tokens)$/;"	f	typeref:typename:std::queue<Token * >
+plot	main.cpp	/^std::vector<Function*> plot(std::vector<String> strs, double xmi, double ymi)$/;"	f	typeref:typename:std::vector<Function * >
+plot	main_old.cpp	/^void plot(std::vector<PlotData*>& plots, int first=0, int fps=60)$/;"	f	typeref:typename:void
+power	parser.cpp	/^double power(double a, double b) { return std::pow(a, b); }$/;"	f	typeref:typename:double
+precedence	parser.cpp	/^	int precedence;$/;"	m	struct:Operator	typeref:typename:int	file:
+prepare_data	main_old.cpp	/^void prepare_data(PlotData& data)$/;"	f	typeref:typename:void
+prepare_data	main_old.cpp	/^void prepare_data(PlotData& data, PlotData& data_main)$/;"	f	typeref:typename:void
+print_ast	ast.cpp	/^std::string print_ast(AstNode* node) {$/;"	f	typeref:typename:std::string
+print_ast_tree	ast.cpp	/^void print_ast_tree(const AstNode* node, int depth, String prefix, bool first_flag) {$/;"	f	typeref:typename:void
+print_queue	ast.cpp	/^void print_queue(std::queue<Token*> q)$/;"	f	typeref:typename:void
+print_token	ast.cpp	/^String print_token(Token* t)$/;"	f	typeref:typename:String
+range	main.cpp	/^	std::pair<double, double> range;$/;"	m	struct:Coordinates2D	typeref:typename:std::pair<double,double>	file:
+right	ast.h	/^			AstNode* right;$/;"	m	struct:AstNode::__anon0f1b4c63010a::__anon0f1b4c630208	typeref:typename:AstNode *
+sa_coords	main.cpp	/^	std::vector<Vector2> sa_coords; \/\/ Screen Axes Coords$/;"	m	struct:Coordinates2D	typeref:typename:std::vector<Vector2>	file:
+screen_coordinates	main.cpp	/^	std::vector<Vector2> screen_coordinates;$/;"	m	struct:Coordinates2D	typeref:typename:std::vector<Vector2>	file:
+screen_coordinates	main_old.cpp	/^    std::vector<Vector2> screen_coordinates;$/;"	m	struct:PlotData	typeref:typename:std::vector<Vector2>	file:
+screen_height	main_old.cpp	/^const int screen_height	= 800;$/;"	v	typeref:typename:const int
+screen_width	main_old.cpp	/^const int screen_width	= 1000;$/;"	v	typeref:typename:const int
+standard_coords	main_old.cpp	/^std::vector<Vector2> standard_coords(PlotData& data, std::vector<Vector2>& points)$/;"	f	typeref:typename:std::vector<Vector2>
+str	main.cpp	/^	String str;$/;"	m	struct:Function	typeref:typename:String	file:
+subtract	parser.cpp	/^double subtract(double a, double b) { return a - b; }$/;"	f	typeref:typename:double
+symbol	ast.h	/^	String symbol; \/\/ For printing$/;"	m	struct:AstNode	typeref:typename:String
+to_ast	parser.cpp	/^AstNode* to_ast(std::queue<Token*> tokens)$/;"	f	typeref:typename:AstNode *
+to_coords	main_old.cpp	/^Vector2 to_coords(PlotData& data, Vector2& point)$/;"	f	typeref:typename:Vector2
+to_string	ast.cpp	/^String to_string(NodeType t)$/;"	f	typeref:typename:String
+to_string	ast.cpp	/^String to_string(TokenType t)$/;"	f	typeref:typename:String
+token_map	parser.cpp	/^std::unordered_map<String, TokenType> token_map = {$/;"	v	typeref:typename:std::unordered_map<String,TokenType>
+tokenize	parser.cpp	/^std::queue<Token*> tokenize(String f)$/;"	f	typeref:typename:std::queue<Token * >
+type	ast.h	/^	NodeType type;$/;"	m	struct:AstNode	typeref:typename:NodeType
+type	parser.cpp	/^	TokenType type;$/;"	m	struct:Operator	typeref:typename:TokenType	file:
+type	parser.h	/^	TokenType type; \/\/ Type of token$/;"	m	struct:Token	typeref:typename:TokenType
+u64	parser.cpp	/^#define u64	/;"	d	file:
+unary_operation	parser.cpp	/^std::unordered_map<TokenType, double(*)(double)> unary_operation = {$/;"	v	typeref:typename:std::unordered_map<TokenType,double (*)(double)>
+update_drawing	main_old.cpp	/^void update_drawing(PlotData& data, PlotState& state, int points, int fps, float total_time, boo/;"	f	typeref:typename:void
+utd	utils.h	/^namespace utd$/;"	n
+value	parser.h	/^	String value; \/\/ String value associated with token$/;"	m	struct:Token	typeref:typename:String
+variable	ast.h	/^		TokenType variable;$/;"	m	union:AstNode::__anon0f1b4c63010a	typeref:typename:TokenType
+variable_map	main_old.cpp	/^std::unordered_map<char, double> variable_map = {$/;"	v	typeref:typename:std::unordered_map<char,double>
+x_max	main_old.cpp	/^    double x_min, y_min, x_max, y_max;$/;"	m	struct:PlotData	typeref:typename:double	file:
+x_min	main_old.cpp	/^    double x_min, y_min, x_max, y_max;$/;"	m	struct:PlotData	typeref:typename:double	file:
+x_offset	main_old.cpp	/^    double x_scale, y_scale, x_offset, y_offset;$/;"	m	struct:PlotData	typeref:typename:double	file:
+x_scale	main_old.cpp	/^    double x_scale, y_scale, x_offset, y_offset;$/;"	m	struct:PlotData	typeref:typename:double	file:
+xmi	main_old.cpp	/^	double xmi, xmx, dx; \/\/ Config$/;"	m	struct:PlotData	typeref:typename:double	file:
+xmx	main_old.cpp	/^	double xmi, xmx, dx; \/\/ Config$/;"	m	struct:PlotData	typeref:typename:double	file:
+xy_coordinates	main.cpp	/^	std::vector<Vector2> xy_coordinates;$/;"	m	struct:Coordinates2D	typeref:typename:std::vector<Vector2>	file:
+y_max	main_old.cpp	/^    double x_min, y_min, x_max, y_max;$/;"	m	struct:PlotData	typeref:typename:double	file:
+y_min	main_old.cpp	/^    double x_min, y_min, x_max, y_max;$/;"	m	struct:PlotData	typeref:typename:double	file:
+y_offset	main_old.cpp	/^    double x_scale, y_scale, x_offset, y_offset;$/;"	m	struct:PlotData	typeref:typename:double	file:
+y_scale	main_old.cpp	/^    double x_scale, y_scale, x_offset, y_offset;$/;"	m	struct:PlotData	typeref:typename:double	file:
+~AstNode	ast.h	/^	~AstNode() {}	\/\/ Destructor$/;"	f	struct:AstNode
+~Coordinates2D	main.cpp	/^	~Coordinates2D() {}$/;"	f	struct:Coordinates2D	file:
+~Function	main.cpp	/^	~Function() {}$/;"	f	struct:Function	file:
+~Token	parser.h	/^	~Token() {}$/;"	f	struct:Token

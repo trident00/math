@@ -1,259 +1,163 @@
-#include "math.h"
-#include <initializer_list>
+#include "parser.h"
+#include "raylib.h"
+#include "ast.h"
 #include <iostream>
 #include <stdio.h>
-#include <chrono>
-#include <thread>
-#include <array>
-#include <utility>
-#include <cmath>
-#include <variant>
-#include <vector>
-#include <memory>
-#include <string>
-#include <unordered_map>
-#include <set>
-#include <stack>
-#include <queue>
 #include <cassert>
-#include "raylib.h"
-#include <thread>
 #include <limits>
-#include "parser.h"
-#include "ast.h"
 
 #define E		2.7182818284590452353602874713527
-#define INF		std::numeric_limits<float>::max()
-#define FINISH() while (!WindowShouldClose()) { std::cout<<"sdfsdsdf"<<std::endl; }
-#define For(container) for (auto& item : container)
+#define INF     std::numeric_limits<double>::max()
 
+const int graph_width = 1000;
+const int graph_height = 1000;
 
-std::unordered_map<char, double> variable_map = {
-	{'x', 1.0f},
-	{'y', 1.0f},
-	{'z', 1.0f}
+struct Coordinates2D
+{
+	std::vector<Vector2> xy_coordinates;
+	std::pair<double, double> domain;
+	std::pair<double, double> range;
+	std::vector<Vector2> screen_coordinates;
+	std::vector<Vector2> sa_coords; // Screen Axes Coords
+	Coordinates2D() {}
+	~Coordinates2D() {}
 };
 
-
-
-
-typedef std::pair<bool, int> PlotState;
-
-const int screen_width	= 1000;
-const int screen_height	= 800;
-const int graph_width	= 800;
-const int graph_height	= 800;
-// Types and Data Structures
-struct PlotData {
-    std::string function;
-    std::vector<Vector2> coordinates;
-    std::vector<Vector2> axes_coordinates;
-    std::vector<Vector2> screen_coordinates;
-	std::vector<std::vector<Vector2>> grid_coordinates;
-	double xmi, xmx, dx; // Config
-    double x_min, y_min, x_max, y_max;
-    double x_scale, y_scale, x_offset, y_offset;
-	Vector2 max_coords = {graph_width, graph_height};
-	float axis_limit = 99999999.0f;
+struct Function
+{
+	String str;
+	AstNode* function; // ast_tree(function)
+	Coordinates2D* coords;
+	
+	Function() {}
+	~Function() {}
 };
 
-
-std::vector<Vector2> evaluate_function(AstNode* tree, double start, double end, double step)
+Vector2 normalize(double scale, double x, double y, double x_offset, double y_offset)
 {
-	std::vector<Vector2> results;
-	// Iterate through the range of values
-	for (double x = start; x <= end+step; x+=step) {
-		// Update map
-		variable_map['x'] = x;
-		// Evaluate function
-		double y = ast_solve(tree, x);
-		//printf("(%.10f, %.10f)\n", x, y);
-		Vector2 vec = {(float)x,(float)y};
-		results.emplace_back(vec);
-	}
-	return results;
-}
-
-PlotData function(String f, double xmi, double xmx, double dx)
-{
-	PlotData data;
-	data.function = f; data.xmi = xmi; data.xmx = xmx; data.dx = dx;
-	data.coordinates = evaluate_function(ast_tree(f), xmi, xmx, dx);
-	return data;
-}
-//
-//	CALCULATE FUNCTIONS
-//
-void cal_minmax(PlotData& data)
-{
-	data.x_min = std::numeric_limits<float>::max();
-	data.x_max = std::numeric_limits<float>::lowest();
-	data.y_min = std::numeric_limits<float>::max();
-	data.y_max = std::numeric_limits<float>::lowest();
-
-	for (const auto& vec : data.coordinates) {
-		data.x_min = std::min((float)data.x_min, vec.x);
-		data.x_max = std::max((float)data.x_max, vec.x);
-		data.y_min = std::min((float)data.y_min, vec.y);
-		data.y_max = std::max((float)data.y_max, vec.y);
-	}
-}
-void cal_scale(PlotData& data)
-{
-	double x_range = data.x_max - data.x_min;
-	double y_range = data.y_max - data.y_min;
-	// Normalization of coords
-	double scale = std::max(x_range, y_range);
-	data.x_scale = 2.0 / scale;
-	data.y_scale = 2.0 / scale;
-
-	data.x_offset = -(data.x_min + x_range / 2.0) * data.x_scale;
-	data.y_offset = -(data.y_min + y_range / 2.0) * data.y_scale;
-}
-
-Vector2 to_coords(PlotData& data, Vector2& point)
-{
-	double ndc_x = (point.x * data.x_scale) + data.x_offset;
-	double ndc_y = (point.y * data.y_scale) + data.y_offset;
+	double ndc_x = (x * scale) + x_offset;
+	double ndc_y = (y * scale) + y_offset;
 	// converts NDC to regular coords (laziness)
-	double standard_x = graph_width * (0.5*ndc_x + 0.5);
-	double standard_y = graph_height * (-0.5*ndc_y + 0.5);
-	return {float(standard_x), float(standard_y)};
+	double screen_x = graph_width * (0.5*ndc_x + 0.5);
+	double screen_y = graph_height * (-0.5*ndc_y + 0.5);
+	return {(float)screen_x, (float)screen_y};
 }
 
-std::vector<Vector2> standard_coords(PlotData& data, std::vector<Vector2>& points)
+Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* main=nullptr, double dx=0.001, double ymi=-INF, double ymx=INF)
 {
-	std::vector<Vector2> result;
-	for (auto& point : points) {
-		result.emplace_back(to_coords(data, point));
-	}
-	return result;
-}
+	Coordinates2D* coords = new Coordinates2D();
 
-void cal_coords(PlotData& data)
-{
-	auto vec = standard_coords(data, data.coordinates);
-	For (vec) {
-		// TEST CASES
-		// keep x coord from going beyond the boundary of the graph (x_max, inf)
-		if (item.x <= graph_width) {
-			data.screen_coordinates.emplace_back(item);
+	double range_min = -INF;
+	double range_max = INF;
+
+	std::vector<Vector2> xy_coords;
+	std::vector<Vector2> screen_coords;
+	for (double x = xmi; x <= xmx; x+=dx) {
+		double y = ast_solve(func->function, x);
+		if (y >= ymi && y <= ymx) {
+			if (y<range_max) range_max = y;
+			if (y>range_min) range_min = y;
+			xy_coords.emplace_back(x, y);
 		}
 	}
-}
-std::vector<Vector2> cal_axes(PlotData& data, float x, float y)
-{
-	std::vector<Vector2> a = {{(float)data.xmi, y}, {(float)data.xmx, y}, {x, -data.axis_limit}, {x, data.axis_limit}};
-	return standard_coords(data, a);
-}
-void cal_grid(PlotData& data, int grid_step)
-{
-	// X
-	std::vector<PlotData*> x_points; std::vector<Vector2> y_points;
-	for (int x = data.xmi; x <= data.xmx; x+= grid_step) {
-		String func = std::to_string(data.axis_limit) + "(x + " + std::to_string(x) + ")";
-		std::cout<<func<<std::endl;
-		x_points.emplace_back(new PlotData(function(func, x, x, 1)));
+	coords->xy_coordinates = xy_coords;
+	coords->range = {range_max, range_min};
+	coords->domain = !main ? std::pair<double, double>(xmi, xmx) : main->coords->domain;
+
+	double domain = coords->domain.second - coords->domain.first;
+	double range = coords->range.second - coords->range.first;
+	double scale = 2.0 / std::max(domain, range);
+	double x_offset = -(coords->domain.first + domain / 2.0) * scale;
+	double y_offset = -(coords->range.first + range / 2.0) * scale;
+	
+	// AXES COORDS
+	if (!main) {
+		std::vector<Vector2> axes_coords = {
+			{0, (float)coords->range.first},	
+			{0, (float)coords->range.second},	
+			{(float)coords->domain.first, 0},	
+			{(float)coords->domain.second, 0}
+		};
+		for (const auto& point : axes_coords) {
+			coords->sa_coords.emplace_back(normalize(scale, point.x, point.y, x_offset, y_offset));
+		}
 	}
-	//For (x_points) {
-	//	prepare_data(&item);
+	// FUNCTION COORDS
+    for (const auto& point : xy_coords) {
+        screen_coords.emplace_back(normalize(scale, point.x, point.y, x_offset, y_offset));
+    }
+
+	coords->screen_coordinates = screen_coords;
+	func->coords = coords;
+
+	// @DEBUG
+	//For (screen_coords) {
+	//	std::cout<<item.x<<" "<<item.y<<std::endl;
 	//}
+	return coords;
 }
-//
-//	DRAW FUNCTIONS
-//
-void draw_axes(PlotData& data, const Color& color)
+
+Function* create_function(String str)
 {
-	auto vec = cal_axes(data, 0, 0);
-	// Correct height of axis
-	DrawLineV(vec[0], vec[1], color);
-	DrawLineV(vec[2], vec[3], color);
+	Function* fun = new Function();
+	fun->str = str;
+	fun->function = ast_tree(fun->str);
+	return fun;
 }
-void draw_grid(PlotData& data, PlotState& state, const Color& color, int x)
+
+const std::vector<Color> colors = {
+	{0,255,0,255},
+	{255,0,0,255},
+	{0,0,255,255},
+	{255,0,255,255}
+};
+
+void draw_axes(Function* f)
 {
-		auto vec = data.grid_coordinates[x];
-		DrawLineV(vec[0], vec[1], color);
-		DrawLineV(vec[2], vec[3], color);
+	auto c = f->coords->sa_coords;
+	DrawLineV(c[0], c[1], {214,214,214,255});
+	DrawLineV(c[2], c[3], {214,214,214,255});
 }
-void draw_function(PlotData& data, PlotState& state, const Color& color)
+
+void draw(std::vector<Function*> f)
 {
-	if (state.second > 1 && !data.screen_coordinates.empty()) {
-		//printf("(%.10f, %.10f)\n",data.screen_coordinates.back().x ,data.screen_coordinates.back()		std::numeric_limits<float>::max().y);
-		int num_points = std::min(state.second, static_cast<int>(data.screen_coordinates.size()));
-		DrawLineStrip(data.screen_coordinates.data(), num_points, color);
+	for (int i = 0; i < f.size(); i++) {
+		DrawLineStrip(f[i]->coords->screen_coordinates.data(), f[i]->coords->screen_coordinates.size(), colors[i]);
 	}
 }
 
-void update_drawing(PlotData& data, PlotState& state, int points, int fps, float total_time, bool s)
+std::vector<Function*> plot(std::vector<String> strs, double xmi, double ymi)
 {
-	float points_per_frame = static_cast<float>(points) / (fps * total_time * 5);
-	if (state.second < points) {
-		state.second += points_per_frame;
-		if (state.second > points) {
-			state.second = points;
-			state.first = true;
-		}
+	std::vector<Function*> fs;
+	Function* main = create_function(strs[0]);
+	main->coords = coordinates_2d(main, xmi, ymi);
+	fs.emplace_back(main);
+	
+	for (int i = 1; i < strs.size(); i++) {
+		Function* f = create_function(strs[i]);
+		f->coords = coordinates_2d(f, xmi, ymi, main);
+		fs.emplace_back(f);
 	}
+	return fs;
 }
 
-// One function
-void prepare_data(PlotData& data)
-{
-	cal_minmax(data);
-	cal_scale(data);
-	cal_coords(data);
-	cal_axes(data,0,0);
-	cal_grid(data, 1);
-}
-// Two functions, secondary function takes the scale of the main
-void prepare_data(PlotData& data, PlotData& data_main)
-{
-	cal_minmax(data);
-	data.x_scale = data_main.x_scale;
-	data.y_scale = data_main.y_scale;
-	data.x_offset = data_main.x_offset;
-	data.y_offset = data_main.y_offset;
-	cal_coords(data);
-}
-
-void plot(std::vector<PlotData*>& plots, int first=0, int fps=60)
-{
-
-	const std::vector<Color> colors = {Color(255,0,0,255), Color(0,255,0,255), Color(0,0,255,255), Color(255,0,255,255)};
-
-	std::vector<PlotState> graph_state(plots.size(), {false, 0});
-	std::vector<PlotState> fn_state(plots.size(), {false, 0});
-	while (!WindowShouldClose()) {
-		ClearBackground(Color());
-		BeginDrawing();
-		for (int x = 0; x < (int)plots[first]->grid_coordinates.size(); x++) {
-			draw_grid(*plots[first], graph_state[first], {118,118,118,255}, x);
-			//update_drawing(*plots[first], graph_state[first], plots[first]->grid_coordinates.size(), fps, true);
-		}
-		bool all_functions_drawn = true;
-		draw_axes(*plots[first], {214,214,214,255});
-		for (size_t i = 0; i < plots.size(); i++) {
-			draw_function(*plots[i], fn_state[i], colors[i]);
-			update_drawing(*plots[i], fn_state[i], plots[i]->screen_coordinates.size(), fps, 2, false);
-			if (!fn_state[first].first) all_functions_drawn = false;
-		}
-
-		if (all_functions_drawn) {
-			draw_axes(*plots[first], {214,214,214,255});
-		}
-		EndDrawing();
-	}
-}
-
-
+// Allow negative numbers, variables, functions, etc.
+// Variable before number (*)
+// Draw Axes as a function?
 
 int main()
 {
-	InitWindow(1000, 800, "Math.exe");
-	PlotData f_2 = function("x^2", -200, 200, 0.0001);
-	PlotData f_1 = function("x^2", -1, 1, 0.0001);
-	std::vector<PlotData*> fs = {&f_2};
-	prepare_data(f_2);
-	plot(fs);
-	return 0;
+	//auto fs = plot({"abs(x)^(2/3) + (9/10)*sin(20*abs(x)))*((3-(abs(x))^2)^(1/2))"}, -2, 5);
+	auto fs = plot({"sinx"},-PI,PI);
+
+	InitWindow(1400,1000, "Math.exe");
+	while (!WindowShouldClose()) {
+		ClearBackground(Color());
+		BeginDrawing();
+		//DrawLine(400, 0, 400, 800, {214,214,214,255});
+		//DrawLine(0, 400, 800, 400, {214,214,214,255});
+		draw(fs);
+		draw_axes(fs[0]);
+		EndDrawing();
+	}
 }

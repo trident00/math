@@ -10,7 +10,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 # add_executable(${PROJECT_NAME} src/main.cpp src/parser.cpp)
-add_executable(${PROJECT_NAME} src/ast.cpp src/parser.cpp src/main2.cpp)
+add_executable(${PROJECT_NAME} src/ast.cpp src/parser.cpp src/main.cpp)
 
 # Add compiler flags>
 target_compile_options(${PROJECT_NAME} PRIVATE -Wpedantic)

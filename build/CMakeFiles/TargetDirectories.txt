@@ -1,3 +1,0 @@
-C:/math/build/CMakeFiles/math.dir
-C:/math/build/CMakeFiles/edit_cache.dir
-C:/math/build/CMakeFiles/rebuild_cache.dir

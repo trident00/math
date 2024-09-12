@@ -15,25 +15,17 @@
 #define E		2.7182818284590452353602874713527
 
 
-void print_queue(std::queue<auto> q)
-{
-  while (!q.empty())
-  {
-    std::cout << q.front().value << " ";
-    q.pop();
-  }
-  std::cout << std::endl;
-}
 
 
 //
 //	Create Node Functions
 //
-AstNode* create_node_number(double value)
+AstNode* create_node_number(Token* token)
 {
 	AstNode* node = new AstNode();
 	node->type = NODE_NUMBER;
-	node->number_value = value;
+	node->number_value = token->num;
+	node->symbol = std::to_string(token->num);
 	return node;
 }
 
@@ -93,7 +85,7 @@ String to_string(TokenType t)
 		case FUNCTION_SEC:			return "FUNCTION_SEC";
 		case FUNCTION_COT:			return "FUNCTION_COT";
 		case FUNCTION_LOG:			return "FUNCTION_LOG";
-		default:					return "UNKNOWN";
+		default:		return "UNKNOWN";
     }
 }
 
@@ -175,6 +167,15 @@ void print_ast_tree(const AstNode* node, int depth, String prefix, bool first_fl
             std::cout << indent << prefix << " UNKNOWN NODE\n";
             break;
     }
+}
+
+void print_queue(std::queue<Token*> q)
+{
+  while (!q.empty()) {
+    std::cout << print_token(q.front()) << " ";
+    q.pop();
+  }
+  std::cout << std::endl;
 }
 //
 // DEBUG END

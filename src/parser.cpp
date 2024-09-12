@@ -37,6 +37,8 @@ std::unordered_map<String, TokenType> token_map = {
 	{"csc", TokenType::FUNCTION_CSC},
 	{"sec", TokenType::FUNCTION_SEC},
 	{"cot", TokenType::FUNCTION_COT},
+	{"abs", TokenType::FUNCTION_ABS},
+	{"sqrt", TokenType::FUNCTION_SQRT},
 	{"log", TokenType::FUNCTION_LOG},
 
 	{"e", TokenType::NUMBER_E},
@@ -58,6 +60,14 @@ Token* create_token_mult()
 	mult->value = "*";
 	mult->type = OPERATOR_MULTIPLY;
 	return mult;
+}
+
+Token* create_token_add()
+{
+	Token* t = new Token();
+	t->value = "+";
+	t->type = OPERATOR_ADD;
+	return t;
 }
 
 Token* create_token_negative()
@@ -84,6 +94,7 @@ std::vector<Token*> lexer(const String& input)
 				if (!result.empty() && result.back()->type == OPERATOR_SUBTRACT) {
 					result.pop_back();
 					n_token->num = -std::stod(num_buffer);
+					result.emplace_back(create_token_add());
 				} else {
 					n_token->num = std::stod(num_buffer);
 				}
@@ -111,6 +122,7 @@ std::vector<Token*> lexer(const String& input)
 						result.emplace_back(create_token_mult());
 					} else if ((is_variable(f_token) || is_function(f_token)) && adj->type == OPERATOR_SUBTRACT) {
 						result.pop_back();
+						result.emplace_back(create_token_add());
 						result.emplace_back(create_token_negative());
 						result.emplace_back(create_token_mult());
 					}
@@ -120,6 +132,15 @@ std::vector<Token*> lexer(const String& input)
 			}
 		}
 	}
+	// @DEBUG
+	For (input) {
+		std::cout<<item<<" ";
+	}
+	std::cout<<std::endl;
+	For (result) {
+		std::cout<<print_token(item)<<" ";
+	}
+	std::cout<<std::endl;
 	return result;
 }
 
@@ -191,6 +212,8 @@ std::queue<Token*> parser(std::vector<Token*> tokens)
 		operators.pop();
 	}
 
+	print_queue(output);
+
 	return output;
 }
 
@@ -208,7 +231,7 @@ AstNode* to_ast(std::queue<Token*> tokens)
 		Token* t = tokens.front();
 		std::cout << "Processing Token: " << print_token(t) << std::endl;
 		if (is_number(t)) {
-			buffer_stack.push(create_node_number(t->num));
+			buffer_stack.push(create_node_number(t));
 			tokens.pop();
 		} else if (is_operator(t)) {
 			assert(buffer_stack.size() >= 2);
@@ -250,6 +273,9 @@ double math_tan(double a) { return std::tan(a); }
 double math_csc(double a) { return 1.0 / std::sin(a); }
 double math_sec(double a) { return 1.0 / std::cos(a); }
 double math_cot(double a) { return 1.0 / std::tan(a); }
+// Others
+double math_abs(double a) { return a >=0 ? a : -a; }
+double math_sqrt(double a) { return power(a, 0.5); }
 double math_log(double a) { if (a <= 0); return std::log(a); }
 
 std::unordered_map<TokenType, double(*)(double, double)> binary_operation = {
@@ -267,6 +293,8 @@ std::unordered_map<TokenType, double(*)(double)> unary_operation = {
 	{FUNCTION_CSC, 			math_csc},
 	{FUNCTION_SEC, 			math_sec},
 	{FUNCTION_COT, 			math_cot},
+	{FUNCTION_ABS,			math_abs},
+	{FUNCTION_SQRT,			math_sqrt},
 	{FUNCTION_LOG, 			math_log},
 };
 
@@ -294,6 +322,7 @@ double ast_solve(AstNode* node, double x, double y, double z)
 				double arg = ast_solve(node->FunctionNode.argument,x,y,z);
 				return unary_operation.at(node->FunctionNode.function)(arg);
 			} else throw std::runtime_error("Missing argument for node NODE_FUNCTION.");
+		default:	throw std::runtime_error("Unknown NODE in ast_solve");
 	}
 	return 0.0;
 }
@@ -302,6 +331,34 @@ double ast_solve(AstNode* node, double x, double y, double z)
 AstNode* ast_tree(String input)
 {
 	return to_ast(tokenize(input));
+}
+
+String ast_to_string(AstNode* node)
+{
+	String result;
+	AstNode* current = node;
+	while (current) {
+		switch (current->type) {
+			case NODE_VARIABLE:
+			case NODE_NUMBER:
+				result += node->symbol;
+				current = nullptr;
+				break;
+			case NODE_OPERATOR:
+				result += ast_to_string(node->OperatorNode.left);
+				result += node->symbol;
+				result += ast_to_string(node->OperatorNode.right);
+				current = nullptr;
+				break;
+			case NODE_FUNCTION:
+				result += node->symbol;
+				result += "(" + ast_to_string(node->FunctionNode.argument) + ")";
+				current = nullptr;
+				break;
+			default:	throw std::runtime_error("Unknown NODE in ast_to_string");
+		}
+	}
+	return result;
 }
 
 void debug()

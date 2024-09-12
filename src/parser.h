@@ -27,12 +27,15 @@ enum TokenType
 	OPERATOR_DIVIDE,
 	OPERATOR_POWER,
 
+	// Unary
 	FUNCTION_SIN,
 	FUNCTION_COS,
 	FUNCTION_TAN,
 	FUNCTION_CSC,
 	FUNCTION_SEC,
 	FUNCTION_COT,
+	FUNCTION_ABS,
+	FUNCTION_SQRT,
 	FUNCTION_LOG
 };
 
@@ -56,3 +59,4 @@ std::queue<Token*> parser(std::vector<Token*> tokens);
 std::queue<Token*> tokenize(String f);
 AstNode* ast_tree(String input);
 double ast_solve(AstNode* node, double x=0, double y=0, double z=0);
+String ast_to_string(AstNode* node);

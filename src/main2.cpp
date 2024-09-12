@@ -33,10 +33,21 @@ struct Function
 	~Function() {}
 };
 
-double scale(std::pair<double,double> domain, double val)
+//double scale(std::pair<double,double> domain, double val)
+//{
+//	double x_center = (domain.second - domain.first) / 2;
+//	return val * (graph_width/2) / x_center + graph_width/2;
+//}
+	
+// RANGE>DOMAIN FUNCTIONS BROKEN
+double scale(std::pair<double,double> domain, std::pair<double,double> range, double val)
 {
-	double x_center = (domain.second - domain.first) / 2;
-	return val * (graph_width/2) / x_center + graph_width/2;
+	//double x_center = (domain.second - domain.first) / 2;
+	//double y_center = (range.second - range.first) / 2;
+	//double scale = std::max(x_center, y_center);
+	double scale = range.first + ((val - domain.first) / (domain.second - domain.first)) * (range.second - range.first);
+
+	return scale;
 }
 
 Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* main=nullptr, double dx=0.01, double ymi=-INF, double ymx=INF)
@@ -59,9 +70,25 @@ Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* 
 	coords->xy_coordinates = xy_coords;
 	coords->range = {range_max, range_min};
 	coords->domain = !main ? std::pair<double, double>(xmi, xmx) : main->coords->domain;
-	For (xy_coords) {
-		screen_coords.emplace_back(scale(coords->domain, item.x),scale(coords->domain, -item.y));
+	if (coords->domain > coords->range) {
+		
 	}
+// Now, normalize and transform the coordinates to screen space
+    for (const auto& point : xy_coords) {
+        // Normalize x and y
+        double x_norm = (point.x - xmi) / (coords->domain.second - coords->domain.first);
+        double y_norm = (point.y - range_min) / (coords->range.second - coords->range.first);
+
+        // Transform to screen space
+        double screen_x = x_norm * x_scale * graph_width;
+        double screen_y = (1 - y_norm) * y_scale * graph_height;  // Inverted y axis for screen
+
+        screen_coords.emplace_back(screen_x, screen_y);
+    }
+
+	//For (xy_coords) {
+	//	screen_coords.emplace_back(scale(coords->domain, coords->range, item.x),scale(coords->domain, coords->range, -item.y));
+	//}
 	coords->screen_coordinates = screen_coords;
 	func->coords = coords;
 	return coords;
@@ -75,9 +102,34 @@ Function* create_function(String str)
 	return fun;
 }
 
-void draw(Function* F, Color color)
+const std::vector<Color> colors = {
+	{0,255,0,255},
+	{255,0,0,255},
+	{0,0,255,255},
+	{255,0,255,255}
+};
+
+void draw(std::vector<Function*> f)
 {
-	DrawLineStrip(F->coords->screen_coordinates.data(), F->coords->screen_coordinates.size(), color);
+	int i = 0;
+	For (f) {
+		DrawLineStrip(item->coords->screen_coordinates.data(), item->coords->screen_coordinates.size(), colors[i]);
+		i++;
+	}
+}
+
+std::vector<Function*> plot(std::vector<String> strs, double xmi, double ymi)
+{
+	std::vector<Function*> fs;
+	Function* main = create_function(strs[0]);
+	main->coords = coordinates_2d(main, xmi, ymi);
+	fs.emplace_back(main);
+	for (int i = 1; i < strs.size(); i++) {
+		Function* f = create_function(strs[i]);
+		f->coords = coordinates_2d(f, xmi, ymi, main);
+		fs.emplace_back(f);
+	}
+	return fs;
 }
 
 // Allow negative numbers, variables, functions, etc.
@@ -86,20 +138,16 @@ void draw(Function* F, Color color)
 
 int main()
 {
-	auto* f = create_function("3xsinx");
-	auto* f2 = create_function("-3x^2");
-	auto* s = coordinates_2d(f, -10, 10);
-	auto* s2 = coordinates_2d(f2, -2, 2);
+	//auto fs = plot({"abs(x)^(2/3) + (9/10)*sin(20*abs(x)))*((3-(abs(x))^2)^(1/2))"}, -2, 5);
+	auto fs = plot({"sinx"},-PI,PI);
+
 	InitWindow(1000,800, "Math.exe");
 	while (!WindowShouldClose()) {
 		ClearBackground(Color());
 		BeginDrawing();
 		DrawLine(400, 0, 400, 800, {214,214,214,255});
 		DrawLine(0, 400, 800, 400, {214,214,214,255});
-		draw(f2, {255,0,0,255});
+		draw(fs);
 		EndDrawing();
 	}
-	//For (s) {
-	//	std::cout<<item.x<<" "<<item.y<<std::endl;
-	//}
 }

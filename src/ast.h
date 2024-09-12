@@ -14,7 +14,7 @@ enum NodeType
 struct AstNode
 {
 	NodeType type;
-	String symbol; // For debug (print_ast_tree())
+	String symbol; // For printing
 	union {
 		// NODE_NUMBER
 		double number_value;
@@ -37,7 +37,8 @@ struct AstNode
 	~AstNode() {}	// Destructor
 };
 
-AstNode* create_node_number(double value);
+void print_queue(std::queue<Token*> q);
+AstNode* create_node_number(Token* token);
 AstNode* create_node_variable(Token* token);
 AstNode* create_node_operator(Token* token, AstNode* left, AstNode* right);
 AstNode* create_node_function(Token* token, AstNode* arg);

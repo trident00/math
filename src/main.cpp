@@ -72,8 +72,10 @@ Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* 
 	
 	// AXES COORDS
 	if (!main) {
+		float y_min = coords->range.first>=0 ? 0 : coords->range.first;
+		float y_max = coords->range.second<=0 ? 0 : coords->range.second;
 		std::vector<Vector2> axes_coords = {
-			{0, (float)coords->range.first},	
+			{0, y_min},	
 			{0, (float)coords->range.second},	
 			{(float)coords->domain.first, 0},	
 			{(float)coords->domain.second, 0}
@@ -90,7 +92,7 @@ Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* 
 	coords->screen_coordinates = screen_coords;
 	func->coords = coords;
 
-	// @DEBUG
+	 //@DEBUG
 	//For (screen_coords) {
 	//	std::cout<<item.x<<" "<<item.y<<std::endl;
 	//}
@@ -148,7 +150,7 @@ std::vector<Function*> plot(std::vector<String> strs, double xmi, double ymi)
 int main()
 {
 	//auto fs = plot({"abs(x)^(2/3) + (9/10)*sin(20*abs(x)))*((3-(abs(x))^2)^(1/2))"}, -2, 5);
-	auto fs = plot({"sinx"},-PI,PI);
+	auto fs = plot({"3-(abs(x))"},-3,3);
 
 	InitWindow(1400,1000, "Math.exe");
 	while (!WindowShouldClose()) {

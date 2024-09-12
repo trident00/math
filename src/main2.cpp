@@ -70,18 +70,27 @@ Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* 
 	coords->xy_coordinates = xy_coords;
 	coords->range = {range_max, range_min};
 	coords->domain = !main ? std::pair<double, double>(xmi, xmx) : main->coords->domain;
-	if (coords->domain > coords->range) {
-		
+
+	double ratio;
+	double domain = coords->domain.second - coords->domain.first;
+	double range = coords->range.second - coords->range.first;
+	double x_center = domain / 2.0;
+	double y_center = range / 2.0;
+	if (domain > range) {
+		ratio = domain;
+	} else {
+		ratio = range;
 	}
+	std::cout<<ratio<<std::endl;
 // Now, normalize and transform the coordinates to screen space
     for (const auto& point : xy_coords) {
         // Normalize x and y
-        double x_norm = (point.x - xmi) / (coords->domain.second - coords->domain.first);
-        double y_norm = (point.y - range_min) / (coords->range.second - coords->range.first);
+        double x_norm = (point.x - x_center) / ratio;
+        double y_norm = (point.y - y_center) / ratio;
 
         // Transform to screen space
-        double screen_x = x_norm * x_scale * graph_width;
-        double screen_y = (1 - y_norm) * y_scale * graph_height;  // Inverted y axis for screen
+        double screen_x = x_norm * graph_width + 800;
+        double screen_y = (-y_norm * graph_height);  // Inverted y axis for screen
 
         screen_coords.emplace_back(screen_x, screen_y);
     }
@@ -89,6 +98,10 @@ Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* 
 	//For (xy_coords) {
 	//	screen_coords.emplace_back(scale(coords->domain, coords->range, item.x),scale(coords->domain, coords->range, -item.y));
 	//}
+	// @DEBUG
+	For (screen_coords) {
+		std::cout<<item.x<<" "<<item.y<<std::endl;
+	}
 	coords->screen_coordinates = screen_coords;
 	func->coords = coords;
 	return coords;

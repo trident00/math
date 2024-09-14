@@ -43,7 +43,7 @@ Vector2 normalize(double scale, double x, double y, double x_offset, double y_of
 	return {(float)screen_x, (float)screen_y};
 }
 
-Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* main=nullptr, double dx=0.001, double ymi=-INF, double ymx=INF)
+Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* main=nullptr, double dx=0.01, double ymi=-INF, double ymx=INF)
 {
 	Coordinates2D* coords = new Coordinates2D();
 
@@ -69,21 +69,26 @@ Coordinates2D* coordinates_2d(Function* func, double xmi, double xmx, Function* 
 	double scale = 2.0 / std::max(domain, range);
 	double x_offset = -(coords->domain.first + domain / 2.0) * scale;
 	double y_offset = -(coords->range.first + range / 2.0) * scale;
-	
+
 	// AXES COORDS
 	if (!main) {
 		float y_min = coords->range.first>=0 ? 0 : coords->range.first;
 		float y_max = coords->range.second<=0 ? 0 : coords->range.second;
+		float x_min = coords->domain.first>=0 ? 0 : coords->domain.first;
+		float x_max = coords->domain.second<=0 ? 0 : coords->domain.second;
 		std::vector<Vector2> axes_coords = {
 			{0, y_min},	
-			{0, (float)coords->range.second},	
-			{(float)coords->domain.first, 0},	
-			{(float)coords->domain.second, 0}
+			{0, y_max},	
+			{x_min, 0},	
+			{x_max, 0}
 		};
 		for (const auto& point : axes_coords) {
 			coords->sa_coords.emplace_back(normalize(scale, point.x, point.y, x_offset, y_offset));
 		}
+		if (coords->sa_coords[2].x > 0) coords->sa_coords[2].x = 0;
+		if (coords->sa_coords[3].x < graph_width) coords->sa_coords[3].x = graph_width;
 	}
+
 	// FUNCTION COORDS
     for (const auto& point : xy_coords) {
         screen_coords.emplace_back(normalize(scale, point.x, point.y, x_offset, y_offset));
@@ -116,9 +121,14 @@ const std::vector<Color> colors = {
 
 void draw_axes(Function* f)
 {
+	auto* co = f->coords;
 	auto c = f->coords->sa_coords;
 	DrawLineV(c[0], c[1], {214,214,214,255});
 	DrawLineV(c[2], c[3], {214,214,214,255});
+	DrawLine(c[1].x-6,c[1].y,c[1].x+6,c[1].y, {214,214,214,255});
+	DrawLine(c[0].x-6,c[0].y,c[0].x+6,c[0].y, {214,214,214,255});
+	//const char* y_max = std::to_string(co->range.second).c_str();
+	//DrawText(y_max, c[1].x+10, c[1].y-4, 12, {214,214,214,255});
 }
 
 void draw(std::vector<Function*> f)
@@ -149,9 +159,8 @@ std::vector<Function*> plot(std::vector<String> strs, double xmi, double ymi)
 
 int main()
 {
-	//auto fs = plot({"abs(x)^(2/3) + (9/10)*sin(20*abs(x)))*((3-(abs(x))^2)^(1/2))"}, -2, 5);
-	auto fs = plot({"3-(abs(x))"},-3,3);
-
+	auto fs = plot({"cosx", "sinx"}, -4, 4);
+	//auto fs = plot({"sinx"},-PI,PI);
 	InitWindow(1400,1000, "Math.exe");
 	while (!WindowShouldClose()) {
 		ClearBackground(Color());
